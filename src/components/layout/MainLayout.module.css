@@ -1,0 +1,310 @@
+/* ===== Premium Dark Sidebar ===== */
+
+/* Sidebar — always dark, regardless of theme */
+.sidebar {
+    background: linear-gradient(180deg, #1E1E2E 0%, #181825 100%) !important;
+    border-right: 1px solid rgba(147, 117, 250, 0.08) !important;
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Logo Section */
+.logoSection {
+    padding: 1.25rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 60px;
+}
+
+.logoIcon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #9775FA 0%, #7C5CE7 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(124, 92, 231, 0.3);
+}
+
+.logoText {
+    color: #fff;
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: opacity 0.2s ease;
+}
+
+.logoVersion {
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.65rem;
+    font-weight: 600;
+    margin-left: auto;
+}
+
+/* Section Headers */
+.sectionHeader {
+    padding: 1.25rem 1.25rem 0.5rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(255, 255, 255, 0.25);
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* Nav Items */
+.navArea {
+    flex: 1;
+    padding: 0.5rem 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.navItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 0.75rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    color: rgba(255, 255, 255, 0.55);
+    text-decoration: none;
+    user-select: none;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.navItem:hover {
+    background: rgba(147, 117, 250, 0.08);
+    color: rgba(255, 255, 255, 0.85);
+    transform: translateX(2px);
+}
+
+.navItem:active {
+    transform: translateX(2px) scale(0.98);
+}
+
+.navItemActive {
+    background: rgba(147, 117, 250, 0.12) !important;
+    color: #D6C6FF !important;
+}
+
+/* Left accent bar for active item */
+.navItemActive::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 60%;
+    border-radius: 0 3px 3px 0;
+    background: linear-gradient(180deg, #9775FA, #7C5CE7);
+    box-shadow: 0 0 8px rgba(124, 92, 231, 0.4);
+}
+
+.navIcon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.navItemActive .navIcon {
+    opacity: 1;
+    color: #B39DDB;
+}
+
+.navItem:hover .navIcon {
+    opacity: 1;
+}
+
+.navLabel {
+    font-size: 0.85rem;
+    font-weight: 500;
+    overflow: hidden;
+    transition: opacity 0.2s ease;
+}
+
+.navBadge {
+    margin-left: auto;
+    background: rgba(147, 117, 250, 0.15);
+    color: #C3AEF5;
+    border: 1px solid rgba(147, 117, 250, 0.2);
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 12px;
+    min-width: 1.5rem;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.navItemActive .navBadge {
+    background: rgba(147, 117, 250, 0.25);
+    color: #D6C6FF;
+    border-color: rgba(147, 117, 250, 0.35);
+}
+
+/* Divider */
+.sectionDivider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.06);
+    margin: 0.25rem 1.25rem;
+}
+
+/* Bottom Section — User Profile + Controls */
+.bottomSection {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 0.75rem;
+}
+
+/* Control Buttons (Theme / Language toggle) */
+.controls {
+    display: flex;
+    gap: 4px;
+    padding: 0 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.controlBtn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 0.4rem 0.5rem;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.45);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.controlBtn:hover {
+    background: rgba(147, 117, 250, 0.08);
+    color: rgba(255, 255, 255, 0.7);
+    border-color: rgba(147, 117, 250, 0.15);
+}
+
+/* User Profile Card */
+.userCard {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    overflow: hidden;
+}
+
+.userCard:hover {
+    background: rgba(147, 117, 250, 0.08);
+}
+
+.userAvatar {
+    flex-shrink: 0;
+}
+
+.userInfo {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.userName {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.userRole {
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.35);
+    text-transform: capitalize;
+}
+
+.logoutBtn {
+    flex-shrink: 0;
+    color: rgba(255, 255, 255, 0.25);
+    transition: color 0.2s ease;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+}
+
+.logoutBtn:hover {
+    color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.08);
+}
+
+/* Header — clean, minimal */
+.header {
+    border-bottom: 1px solid var(--mantine-color-default-border);
+}
+
+/* Collapse Toggle */
+.collapseToggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: absolute;
+    right: -13px;
+    top: 28px;
+    z-index: 100;
+}
+
+.collapseToggle:hover {
+    background: rgba(147, 117, 250, 0.15);
+    color: #D6C6FF;
+    border-color: rgba(147, 117, 250, 0.3);
+}
+
+/* Scrollbar styling for sidebar */
+.sidebar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
