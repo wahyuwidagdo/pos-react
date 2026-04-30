@@ -14,7 +14,7 @@ import { useForm } from '@mantine/form';
 import { useNavigate, Link } from 'react-router-dom';
 import { notifications } from '@mantine/notifications';
 import { useTranslation } from 'react-i18next';
-import api from '../api/axios';
+import { authService } from '../api/services';
 
 export default function Register() {
     const { t } = useTranslation();
@@ -40,7 +40,7 @@ export default function Register() {
     const handleSubmit = async (values) => {
         setIsLoading(true);
         try {
-            await api.post('/auth/register', {
+            await authService.register({
                 username: values.username,
                 password: values.password,
                 full_name: values.full_name,

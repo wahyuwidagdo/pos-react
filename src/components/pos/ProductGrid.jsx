@@ -14,8 +14,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useIntersection, useDebouncedValue } from '@mantine/hooks';
 import { IconSearch, IconShoppingCartPlus } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
-import api from '../../api/axios';
-import { formatCurrency } from '../../lib/formatter';
+import { productService } from '../../api/services';import { formatCurrency } from '../../lib/formatter';
 import useCartStore from '../../store/useCartStore';
 import { notifications } from '@mantine/notifications';
 
@@ -27,8 +26,8 @@ const fetchProducts = async ({ pageParam = 1, searchQuery = '' }) => {
     if (searchQuery) {
         params.search = searchQuery;
     }
-    const { data } = await api.get('/products', { params });
-    return data;
+    const res = await productService.getAll(params);
+    return res;
 };
 
 export default function ProductGrid() {

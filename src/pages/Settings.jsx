@@ -5,8 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { notifications } from '@mantine/notifications';
 import { useMantineColorScheme } from '@mantine/core';
 import useAuthStore from '../store/useAuthStore';
-import api from '../api/axios';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { settingsService, authService } from '../api/services';import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function Settings() {
     const { t } = useTranslation();
@@ -60,8 +59,8 @@ export default function Settings() {
     // Fetch store settings on mount (admin only)
     useEffect(() => {
         if (isAdmin) {
-            api.get('/store-settings').then((res) => {
-                const s = res.data.data;
+            settingsService.getStoreSettings().then((res) => {
+                const s = res.data;
                 if (s) {
                     setStoreForm({
                         store_name: s.store_name || '',
@@ -77,7 +76,7 @@ export default function Settings() {
     const handleUpdateStoreSettings = async () => {
         setStoreLoading(true);
         try {
-            await api.put('/store-settings', storeForm);
+            await settingsService.updateStoreSettings(storeForm);
             notifications.show({
                 title: t('common.success'),
                 message: t('settings.store_updated'),
@@ -98,11 +97,11 @@ export default function Settings() {
     const handleUpdateProfile = async () => {
         setProfileLoading(true);
         try {
-            const response = await api.put('/auth/profile', {
+            const response = await authService.updateProfile({
                 username: profileForm.username,
                 full_name: profileForm.full_name,
             });
-            const updatedUser = response.data.data;
+            const updatedUser = response.data;
             setUser(updatedUser);
             notifications.show({
                 title: t('common.success'),
@@ -150,7 +149,7 @@ export default function Settings() {
 
         setPasswordLoading(true);
         try {
-            await api.put('/auth/password', {
+            await authService.changePassword({
                 current_password: passwordForm.current_password,
                 new_password: passwordForm.new_password,
             });
@@ -382,15 +381,15 @@ function PaymentMethodsPanel({ queryClient, pmModalOpened, setPmModalOpened, edi
     const { data: methods = [], isLoading } = useQuery({
         queryKey: ['payment-methods'],
         queryFn: async () => {
-            const res = await api.get('/payment-methods');
-            return res.data.data || [];
+            const res = await settingsService.getPaymentMethods();
+            return res.data || [];
         },
     });
 
     const saveMutation = useMutation({
         mutationFn: (payload) => {
-            if (editPm) return api.put(`/payment-methods/${editPm.id}`, payload);
-            return api.post('/payment-methods', payload);
+            if (editPm) return settingsService.updatePaymentMethod(editPm.id, payload);
+            return settingsService.createPaymentMethod(payload);
         },
         onSuccess: () => {
             notifications.show({ title: 'Success', message: editPm ? 'Payment method updated' : 'Payment method created', color: 'green', icon: <IconCheck size={16} /> });
@@ -403,7 +402,7 @@ function PaymentMethodsPanel({ queryClient, pmModalOpened, setPmModalOpened, edi
     });
 
     const deleteMutation = useMutation({
-        mutationFn: (id) => api.delete(`/payment-methods/${id}`),
+        mutationFn: (id) => settingsService.deletePaymentMethod(id),
         onSuccess: () => {
             notifications.show({ title: 'Deleted', message: 'Payment method removed', color: 'orange' });
             queryClient.invalidateQueries(['payment-methods']);
@@ -411,7 +410,7 @@ function PaymentMethodsPanel({ queryClient, pmModalOpened, setPmModalOpened, edi
     });
 
     const toggleMutation = useMutation({
-        mutationFn: ({ id, is_active }) => api.put(`/payment-methods/${id}`, { is_active }),
+        mutationFn: ({ id, is_active }) => settingsService.updatePaymentMethod(id, { is_active }),
         onSuccess: () => {
             queryClient.invalidateQueries(['payment-methods']);
         },

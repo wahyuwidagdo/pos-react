@@ -9,7 +9,7 @@ import StockAlert from '../components/dashboard/StockAlert';
 import PaymentMethodChart from '../components/dashboard/PaymentMethodChart';
 import CashFlowChart from '../components/dashboard/CashFlowChart';
 import QuickActions from '../components/dashboard/QuickActions';
-import api from '../api/axios';
+import { dashboardService } from '../api/services';
 import { formatDate } from '../lib/formatter';
 
 // Top Products Component
@@ -38,8 +38,8 @@ export default function Dashboard() {
   const { data, isLoading } = useQuery({
     queryKey: ['dashboard', dateRange],
     queryFn: async () => {
-      const response = await api.get('/dashboard', { params: { range: dateRange } });
-      return response.data.data;
+      const res = await dashboardService.getDashboard({ range: dateRange });
+      return res.data;
     },
   });
 

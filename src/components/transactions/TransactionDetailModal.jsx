@@ -4,10 +4,9 @@ import { IconPrinter } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { useReactToPrint } from 'react-to-print';
-import { transactionService } from '../../api/transactionService';
+import { transactionService, settingsService } from '../../api/services';
 import { Receipt } from '../pos/Receipt';
 import useAuthStore from '../../store/useAuthStore';
-import api from '../../api/axios';
 
 export default function TransactionDetailModal({ opened, onClose, transactionId }) {
     const { t } = useTranslation();
@@ -23,8 +22,8 @@ export default function TransactionDetailModal({ opened, onClose, transactionId 
     const { data: storeSettings } = useQuery({
         queryKey: ['store-settings'],
         queryFn: async () => {
-            const res = await api.get('/store-settings');
-            return res.data?.data || res.data;
+            const res = await settingsService.getStoreSettings();
+            return res.data || res;
         },
         staleTime: 60000,
     });

@@ -9,8 +9,7 @@ import { IconShoppingCart, IconBarcode } from '@tabler/icons-react';
 import { notifications } from '@mantine/notifications';
 import useCartStore from '../store/useCartStore';
 import useBarcodeScanner from '../hooks/useBarcodeScanner';
-import api from '../api/axios';
-
+import { productService } from '../api/services';
 export default function POS() {
     const { t } = useTranslation();
     const [opened, { open, close }] = useDisclosure(false);
@@ -24,7 +23,7 @@ export default function POS() {
     const handleBarcodeScan = useCallback(async (sku) => {
         try {
             // Search for the product by SKU
-            const { data } = await api.get('/products', { params: { search: sku, pageSize: 5 } });
+            const { data } = await productService.getAll({ search: sku, pageSize: 5 });
             const products = data?.data || [];
 
             // Find exact SKU match

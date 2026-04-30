@@ -45,7 +45,7 @@ import {
 } from '@tabler/icons-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { notifications } from '@mantine/notifications';
-import api from '../api/axios';
+import { productService, categoryService } from '../api/services';
 import { formatCurrency } from '../lib/formatter';
 import { downloadFile } from '../lib/export';
 import { useTranslation } from 'react-i18next';
@@ -114,8 +114,8 @@ export default function Products() {
                 params.sortBy = sortBy;
                 params.sortOrder = sortOrder || 'asc';
             }
-            const res = await api.get('/products', { params });
-            return res.data;
+            const res = await productService.getAll(params);
+            return res;
         },
         keepPreviousData: true,
     });
@@ -124,8 +124,8 @@ export default function Products() {
     const { data: stockCounts } = useQuery({
         queryKey: ['stock-counts'],
         queryFn: async () => {
-            const res = await api.get('/products/stock-counts');
-            return res.data.data;
+            const res = await productService.getStockCounts();
+            return res.data;
         },
         staleTime: 10000,
     });
@@ -135,8 +135,8 @@ export default function Products() {
         queryKey: ['categories'],
         queryFn: async () => {
             try {
-                const res = await api.get('/categories');
-                const data = res.data.data || res.data;
+                const res = await categoryService.getAll();
+                const data = res.data || res;
                 if (!Array.isArray(data)) return [];
                 return data.map(c => ({ value: String(c.id), label: c.name }));
             } catch (e) {
@@ -168,7 +168,7 @@ export default function Products() {
 
     // Mutations
     const createMutation = useMutation({
-        mutationFn: (values) => api.post('/products', {
+        mutationFn: (values) => productService.create({
             ...values,
             category_id: Number(values.category_id),
             price: Number(values.price),
@@ -187,7 +187,7 @@ export default function Products() {
     });
 
     const updateMutation = useMutation({
-        mutationFn: (values) => api.put(`/products/${editingId}`, {
+        mutationFn: (values) => productService.update(editingId, {
             ...values,
             category_id: Number(values.category_id),
             price: Number(values.price),
@@ -206,7 +206,7 @@ export default function Products() {
     });
 
     const deleteMutation = useMutation({
-        mutationFn: (id) => api.delete(`/products/${id}`),
+        mutationFn: (id) => productService.delete(id),
         onSuccess: () => {
             queryClient.invalidateQueries(['products']);
             queryClient.invalidateQueries(['stock-counts']);
@@ -215,7 +215,7 @@ export default function Products() {
     });
 
     const restoreMutation = useMutation({
-        mutationFn: (id) => api.post(`/products/${id}/restore`),
+        mutationFn: (id) => productService.restore(id),
         onSuccess: () => {
             queryClient.invalidateQueries(['products']);
             queryClient.invalidateQueries(['stock-counts']);
@@ -224,7 +224,7 @@ export default function Products() {
     });
 
     const forceDeleteMutation = useMutation({
-        mutationFn: (id) => api.delete(`/products/${id}/force`),
+        mutationFn: (id) => productService.forceDelete(id),
         onSuccess: () => {
             queryClient.invalidateQueries(['products']);
             queryClient.invalidateQueries(['stock-counts']);

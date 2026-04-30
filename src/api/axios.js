@@ -67,6 +67,18 @@ api.interceptors.response.use(
             });
         }
 
+        // 400 Bad Request / 422 Unprocessable Entity — Validation errors from backend
+        if (status === 400 || status === 422) {
+            const data = error.response?.data;
+            const message = data?.message || data?.error || 'The request contains invalid data.';
+            notifications.show({
+                title: 'Validation Error',
+                message,
+                color: 'red',
+                autoClose: 5000,
+            });
+        }
+
         return Promise.reject(error);
     }
 );
