@@ -33,8 +33,7 @@ import {
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import useAuthStore from '../../store/useAuthStore';
 import { useQuery } from '@tanstack/react-query';
-import api from '../../api/axios';
-import { useTranslation } from 'react-i18next';
+import { productService, categoryService } from '../../api/services';import { useTranslation } from 'react-i18next';
 import classes from './MainLayout.module.css';
 import NotificationCenter from './NotificationCenter';
 import useStockAlerts from '../../hooks/useStockAlerts';
@@ -74,8 +73,8 @@ export default function MainLayout() {
     const { data: productData } = useQuery({
         queryKey: ['products-count'],
         queryFn: async () => {
-            const res = await api.get('/products', { params: { page: 1, pageSize: 1 } });
-            return res.data;
+            const res = await productService.getAll({ page: 1, pageSize: 1 });
+            return res;
         },
         enabled: ['admin', 'manager'].includes(userRole),
         staleTime: 30000,
@@ -84,8 +83,8 @@ export default function MainLayout() {
     const { data: categoryData } = useQuery({
         queryKey: ['categories-count'],
         queryFn: async () => {
-            const res = await api.get('/categories');
-            const data = res.data.data || res.data;
+            const res = await categoryService.getAll();
+            const data = res.data || res;
             return Array.isArray(data) ? data.length : 0;
         },
         enabled: ['admin', 'manager'].includes(userRole),

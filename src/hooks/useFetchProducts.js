@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import api from '../api/axiosInstance'; // Axios instance dengan JWT interceptor
+import api from '../api/axios';
 
 const useFetchProducts = () => {
   const [products, setProducts] = useState([]);

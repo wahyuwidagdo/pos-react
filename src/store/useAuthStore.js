@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import api from '../api/axios';
+import { authService } from '../api/services';
 
 // Helper to decode JWT payload
 function decodeJWT(token) {
@@ -35,8 +35,8 @@ const useAuthStore = create((set, get) => ({
     login: async (username, password) => {
         set({ isLoading: true, error: null });
         try {
-            const response = await api.post('/auth/login', { username, password });
-            const { data } = response.data; // { token, user }
+            const response = await authService.login({ username, password });
+            const { data } = response; // { token, user }
 
             const user = data.user || decodeJWT(data.token);
 
@@ -60,8 +60,8 @@ const useAuthStore = create((set, get) => ({
     // Fetch profile from server and update store
     fetchProfile: async () => {
         try {
-            const response = await api.get('/auth/profile');
-            const user = response.data.data;
+            const response = await authService.getProfile();
+            const user = response.data;
             localStorage.setItem('user', JSON.stringify(user));
             set({ user });
             return user;

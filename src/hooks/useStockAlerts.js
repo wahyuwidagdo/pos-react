@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import api from '../api/axios';
+import { productService } from '../api/services';
 import useNotificationStore from '../store/useNotificationStore';
 import useAuthStore from '../store/useAuthStore';
 
@@ -19,14 +19,12 @@ export default function useStockAlerts() {
         queryKey: ['stock-alerts'],
         queryFn: async () => {
             // Fetch products with low/zero stock
-            const res = await api.get('/products', {
-                params: {
-                    page: 1,
-                    pageSize: 100,
-                    stockFilter: 'low',
-                    sortBy: 'stock',
-                    sortOrder: 'asc',
-                },
+            const res = await productService.getAll({
+                page: 1,
+                pageSize: 100,
+                stockFilter: 'low',
+                sortBy: 'stock',
+                sortOrder: 'asc',
             });
             return res.data?.data || [];
         },

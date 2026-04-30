@@ -24,7 +24,7 @@ import {
     IconDotsVertical, IconPrinter, IconArrowBackUp, IconX,
 } from '@tabler/icons-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { transactionService } from '../api/transactionService';
+import { transactionService, settingsService } from '../api/services';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import { useDisclosure } from '@mantine/hooks';
@@ -33,7 +33,6 @@ import { useReactToPrint } from 'react-to-print';
 import TransactionDetailModal from '../components/transactions/TransactionDetailModal';
 import { Receipt } from '../components/pos/Receipt';
 import useAuthStore from '../store/useAuthStore';
-import api from '../api/axios';
 
 export default function Transactions() {
     const { t } = useTranslation();
@@ -55,8 +54,8 @@ export default function Transactions() {
     const { data: storeSettings } = useQuery({
         queryKey: ['store-settings'],
         queryFn: async () => {
-            const res = await api.get('/store-settings');
-            return res.data?.data || res.data;
+            const res = await settingsService.getStoreSettings();
+            return res.data || res;
         },
         staleTime: 60000,
     });

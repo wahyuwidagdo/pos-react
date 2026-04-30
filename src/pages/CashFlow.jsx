@@ -14,7 +14,7 @@ import {
 } from '@tabler/icons-react';
 import { notifications } from '@mantine/notifications';
 import { useTranslation } from 'react-i18next';
-import api from '../api/axios';
+import { cashFlowService } from '../api/services';
 
 const TYPE_CONFIG = {
     income: { color: 'teal', icon: IconArrowDownRight, label: 'Income' },
@@ -122,7 +122,7 @@ export default function CashFlow() {
             if (filterType) params.type = filterType;
             if (startDate) params.start_date = startDate;
             if (endDate) params.end_date = endDate;
-            const res = await api.get('/cash-flow', { params });
+            const res = await cashFlowService.getAll(params);
             return res.data;
         },
     });
@@ -134,8 +134,8 @@ export default function CashFlow() {
             const params = {};
             if (startDate) params.start_date = startDate;
             if (endDate) params.end_date = endDate;
-            const res = await api.get('/cash-flow/summary', { params });
-            return res.data.data;
+            const res = await cashFlowService.getSummary(params);
+            return res.data;
         },
     });
 
@@ -143,9 +143,9 @@ export default function CashFlow() {
     const saveMutation = useMutation({
         mutationFn: (payload) => {
             if (editId) {
-                return api.put(`/cash-flow/${editId}`, payload);
+                return cashFlowService.update(editId, payload);
             }
-            return api.post('/cash-flow', payload);
+            return cashFlowService.create(payload);
         },
         onSuccess: () => {
             notifications.show({
@@ -169,7 +169,7 @@ export default function CashFlow() {
 
     // Delete mutation
     const deleteMutation = useMutation({
-        mutationFn: (id) => api.delete(`/cash-flow/${id}`),
+        mutationFn: (id) => cashFlowService.delete(id),
         onSuccess: () => {
             notifications.show({ title: t('common.success'), message: t('cash_flow.modal.delete_success', 'Entry removed'), color: 'orange' });
             queryClient.invalidateQueries({ queryKey: ['cash-flow'] });

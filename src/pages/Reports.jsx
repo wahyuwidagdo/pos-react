@@ -40,7 +40,7 @@ import {
     ResponsiveContainer
 } from 'recharts';
 import dayjs from 'dayjs';
-import api from '../api/axios';
+import { reportService } from '../api/services';
 import { formatCurrency } from '../lib/formatter';
 import { downloadFile } from '../lib/export';
 import { notifications } from '@mantine/notifications';
@@ -60,8 +60,8 @@ export default function Reports() {
     const { data: salesData, isLoading: salesLoading } = useQuery({
         queryKey: ['report-sales', startDate, endDate],
         queryFn: async () => {
-            const res = await api.get('/reports/sales', { params: { start_date: startDate, end_date: endDate } });
-            return res.data.data;
+            const res = await reportService.getSalesReport({ start_date: startDate, end_date: endDate });
+            return res.data;
         },
         enabled: activeTab === 'sales' || activeTab === 'hours'
     });
@@ -69,8 +69,8 @@ export default function Reports() {
     const { data: productData, isLoading: productLoading } = useQuery({
         queryKey: ['report-products', startDate, endDate],
         queryFn: async () => {
-            const res = await api.get('/reports/products', { params: { start_date: startDate, end_date: endDate, limit: 20 } });
-            return res.data.data;
+            const res = await reportService.getProductReport({ start_date: startDate, end_date: endDate, limit: 20 });
+            return res.data;
         },
         enabled: activeTab === 'products'
     });
@@ -78,8 +78,8 @@ export default function Reports() {
     const { data: stockValueData, isLoading: stockLoading } = useQuery({
         queryKey: ['report-stock-value'],
         queryFn: async () => {
-            const res = await api.get('/reports/stock-value');
-            return res.data.data;
+            const res = await reportService.getStockValue();
+            return res.data;
         },
         enabled: activeTab === 'stock'
     });

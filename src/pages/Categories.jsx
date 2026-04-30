@@ -30,8 +30,7 @@ import {
 } from '@tabler/icons-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { notifications } from '@mantine/notifications';
-import api from '../api/axios';
-import { useTranslation } from 'react-i18next';
+import { categoryService } from '../api/services';
 
 export default function Categories() {
     const { t } = useTranslation();
@@ -58,10 +57,10 @@ export default function Categories() {
     const { data, isLoading } = useQuery({
         queryKey: ['categories', showTrash],
         queryFn: async () => {
-            const res = await api.get('/categories', {
-                params: { trashed: showTrash === 'trash' }
+            const res = await categoryService.getAll({
+                trashed: showTrash === 'trash'
             });
-            return res.data.data || res.data;
+            return res.data || res;
         },
     });
 
@@ -82,7 +81,7 @@ export default function Categories() {
 
     // Mutations
     const createMutation = useMutation({
-        mutationFn: (values) => api.post('/categories', values),
+        mutationFn: (values) => categoryService.create(values),
         onSuccess: () => {
             queryClient.invalidateQueries(['categories']);
             closeModal();
@@ -94,7 +93,7 @@ export default function Categories() {
     });
 
     const updateMutation = useMutation({
-        mutationFn: (values) => api.put(`/categories/${editingId}`, values),
+        mutationFn: (values) => categoryService.update(editingId, values),
         onSuccess: () => {
             queryClient.invalidateQueries(['categories']);
             closeModal();
@@ -106,7 +105,7 @@ export default function Categories() {
     });
 
     const deleteMutation = useMutation({
-        mutationFn: (id) => api.delete(`/categories/${id}`),
+        mutationFn: (id) => categoryService.delete(id),
         onSuccess: () => {
             queryClient.invalidateQueries(['categories']);
             notifications.show({ title: 'Success', message: 'Category deleted', color: 'green' });
@@ -119,7 +118,7 @@ export default function Categories() {
     });
 
     const restoreMutation = useMutation({
-        mutationFn: (id) => api.post(`/categories/${id}/restore`),
+        mutationFn: (id) => categoryService.restore(id),
         onSuccess: () => {
             queryClient.invalidateQueries(['categories']);
             notifications.show({ title: 'Success', message: t('categories.restore_success'), color: 'green' });
@@ -132,7 +131,7 @@ export default function Categories() {
     });
 
     const forceDeleteMutation = useMutation({
-        mutationFn: (id) => api.delete(`/categories/${id}/force`),
+        mutationFn: (id) => categoryService.forceDelete(id),
         onSuccess: () => {
             queryClient.invalidateQueries(['categories']);
             notifications.show({ title: 'Success', message: t('categories.force_delete_success'), color: 'green' });

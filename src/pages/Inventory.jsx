@@ -13,7 +13,7 @@ import {
 } from '@tabler/icons-react';
 import { notifications } from '@mantine/notifications';
 import { useTranslation } from 'react-i18next';
-import api from '../api/axios';
+import { inventoryService, productService } from '../api/services';
 
 const TYPE_CONFIG = {
     in: { color: 'teal', icon: IconArrowDown, label: 'Stock In' },
@@ -109,7 +109,7 @@ export default function Inventory() {
             if (filterType) params.type = filterType;
             if (startDate) params.start_date = startDate;
             if (endDate) params.end_date = endDate;
-            const res = await api.get('/inventory', { params });
+            const res = await inventoryService.getAll(params);
             return res.data;
         },
     });
@@ -118,7 +118,7 @@ export default function Inventory() {
     const { data: productData } = useQuery({
         queryKey: ['products-select'],
         queryFn: async () => {
-            const res = await api.get('/products', { params: { page: 1, pageSize: 500 } });
+            const res = await productService.getAll({ page: 1, pageSize: 500 });
             return (res.data.data || []).map(p => ({
                 value: String(p.id),
                 label: `${p.name} (Stock: ${p.stock}) - ${p.sku || 'No SKU'}`,
@@ -134,14 +134,14 @@ export default function Inventory() {
             const params = {};
             if (startDate) params.start_date = startDate;
             if (endDate) params.end_date = endDate;
-            const res = await api.get('/inventory/stats', { params });
-            return res.data.data;
+            const res = await inventoryService.getStats(params);
+            return res.data;
         },
     });
 
     // Mutation
     const adjustMutation = useMutation({
-        mutationFn: (payload) => api.post('/inventory', payload),
+        mutationFn: (payload) => inventoryService.adjustStock(payload),
         onSuccess: () => {
             notifications.show({ title: t('common.success'), message: t('inventory.modal.success_msg', 'Stock adjusted successfully'), color: 'teal' });
             queryClient.invalidateQueries(['inventory-logs']);

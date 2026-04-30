@@ -16,8 +16,7 @@ import { notifications } from '@mantine/notifications';
 import { IconPrinter, IconCheck } from '@tabler/icons-react';
 import { useReactToPrint } from 'react-to-print';
 import { useTranslation } from 'react-i18next';
-import api from '../../api/axios';
-import useCartStore from '../../store/useCartStore';
+import { settingsService, transactionService } from '../../api/services';import useCartStore from '../../store/useCartStore';
 import useAuthStore from '../../store/useAuthStore';
 import { formatCurrency } from '../../lib/formatter';
 import { Receipt } from './Receipt';
@@ -36,8 +35,8 @@ export default function CheckoutModal({ opened, onClose, total }) {
     const { data: storeSettingsData } = useQuery({
         queryKey: ['store-settings'],
         queryFn: async () => {
-            const res = await api.get('/store-settings');
-            return res.data.data;
+            const res = await settingsService.getStoreSettings();
+            return res.data;
         },
         staleTime: 5 * 60 * 1000, // cache for 5 min
     });
@@ -45,8 +44,8 @@ export default function CheckoutModal({ opened, onClose, total }) {
     const { data: paymentMethodsRaw = [] } = useQuery({
         queryKey: ['payment-methods'],
         queryFn: async () => {
-            const res = await api.get('/payment-methods');
-            return res.data.data || [];
+            const res = await settingsService.getPaymentMethods();
+            return res.data || [];
         },
         staleTime: 5 * 60 * 1000,
     });
@@ -96,8 +95,8 @@ export default function CheckoutModal({ opened, onClose, total }) {
                 payment_method: values.paymentMethod,
                 cash: currentIsCash ? values.cashReceived : total,
             };
-            const response = await api.post('/transactions', payload);
-            return response.data;
+            const response = await transactionService.create(payload);
+            return response;
         },
         onSuccess: (data) => {
             setTransaction(data.data);
