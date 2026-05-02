@@ -119,7 +119,8 @@ export default function Inventory() {
         queryKey: ['products-select'],
         queryFn: async () => {
             const res = await productService.getAll({ page: 1, pageSize: 500 });
-            return (res.data.data || []).map(p => ({
+            const products = res.data?.data || res.data || res || [];
+            return (Array.isArray(products) ? products : []).map(p => ({
                 value: String(p.id),
                 label: `${p.name} (Stock: ${p.stock}) - ${p.sku || 'No SKU'}`,
                 cost: p.cost || 0
@@ -353,9 +354,12 @@ export default function Inventory() {
                     />
 
                     <Select
-                        label={t('inventory.modal.product', 'Product')}
-                        placeholder={t('inventory.modal.search_product', 'Search product...')}
+                        label={t('inventory.modal.product', 'Produk')}
+                        placeholder={t('inventory.modal.search_product', 'Cari produk...')}
                         searchable
+                        clearable
+                        limit={100}
+                        nothingFoundMessage="Tidak ada produk ditemukan"
                         data={productData || []}
                         value={formProductId}
                         onChange={(val) => {
@@ -369,11 +373,14 @@ export default function Inventory() {
                     />
 
                     <Select
-                        label={t('inventory.modal.source', 'Source / Reason')}
-                        placeholder={t('inventory.modal.select_reason', 'Select reason')}
+                        label={t('inventory.modal.source', 'Sumber / Alasan')}
+                        placeholder={t('inventory.modal.select_reason', 'Pilih alasan')}
                         data={SOURCE_OPTIONS[formType] || []}
                         value={formSource}
                         onChange={setFormSource}
+                        searchable
+                        clearable
+                        nothingFoundMessage="Tidak ada alasan ditemukan"
                         required
                     />
 

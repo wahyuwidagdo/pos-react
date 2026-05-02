@@ -9,11 +9,13 @@ import {
     SegmentedControl,
     Divider,
     Paper,
+    Grid,
 } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { notifications } from '@mantine/notifications';
-import { IconPrinter, IconCheck } from '@tabler/icons-react';
+import { IconPrinter, IconCheck, IconBackspace } from '@tabler/icons-react';
 import { useReactToPrint } from 'react-to-print';
 import { useTranslation } from 'react-i18next';
 import { settingsService, transactionService } from '../../api/services';import useCartStore from '../../store/useCartStore';
@@ -27,6 +29,7 @@ export default function CheckoutModal({ opened, onClose, total }) {
     const { items, clearCart } = useCartStore();
     const { user } = useAuthStore();
     const queryClient = useQueryClient();
+    const isMobile = useMediaQuery('(max-width: 768px)');
     const [transaction, setTransaction] = useState(null);
     const receiptRef = useRef(null);
     const { addNotification } = useNotificationStore();
@@ -150,7 +153,8 @@ export default function CheckoutModal({ opened, onClose, total }) {
             title={<Text fw={700} size="lg">{t('pos.checkout')}</Text>}
             centered
             size="md"
-            fullScreen={window.innerWidth < 500}
+            fullScreen={isMobile}
+            transitionProps={{ transition: 'slide-up' }}
         >
             {/* Hidden Receipt Component for Printing */}
             <div style={{ position: 'absolute', opacity: 0, zIndex: -1000, top: 0, left: 0, height: 0, overflow: 'hidden' }}>
@@ -199,6 +203,95 @@ export default function CheckoutModal({ opened, onClose, total }) {
                                     size="lg"
                                     {...form.getInputProps('cashReceived')}
                                 />
+
+                                {/* Virtual Numpad */}
+                                <Stack gap={4}>
+                                    <Text size="xs" fw={700} c="dimmed" style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                                        {t('pos.quick_input', 'Input Cepat')}
+                                    </Text>
+                                    <Paper 
+                                        withBorder 
+                                        p="sm" 
+                                        radius="lg" 
+                                        bg="var(--mantine-color-default-hover)" 
+                                        style={{ borderStyle: 'dashed' }}
+                                    >
+                                    <Stack gap="xs">
+                                        {/* Quick Amount Buttons */}
+                                        <Group gap="xs" grow>
+                                            <Button 
+                                                variant="filled" 
+                                                size="xs" 
+                                                color="kala-lilac"
+                                                onClick={() => form.setFieldValue('cashReceived', total)}
+                                            >
+                                                {t('pos.exact', 'Pas')}
+                                            </Button>
+                                            {[10000, 20000, 50000, 100000].map(amt => (
+                                                <Button 
+                                                    key={amt}
+                                                    variant="light" 
+                                                    size="xs" 
+                                                    color="gray"
+                                                    onClick={() => {
+                                                        const current = Number(form.values.cashReceived) || 0;
+                                                        form.setFieldValue('cashReceived', current + amt);
+                                                    }}
+                                                >
+                                                    +{amt >= 1000 ? `${amt/1000}k` : amt}
+                                                </Button>
+                                            ))}
+                                            <Button 
+                                                variant="subtle" 
+                                                size="xs" 
+                                                color="red"
+                                                onClick={() => form.setFieldValue('cashReceived', '')}
+                                            >
+                                                C
+                                            </Button>
+                                        </Group>
+
+                                        {/* Numpad Grid */}
+                                        <Grid gutter={8}>
+                                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, '000', 0, 'backspace'].map((val) => (
+                                                <Grid.Col span={4} key={val}>
+                                                    <Button
+                                                        fullWidth
+                                                        variant="default"
+                                                        size="lg"
+                                                        radius="md"
+                                                        onClick={() => {
+                                                            const current = String(form.values.cashReceived || '');
+                                                            if (val === 'backspace') {
+                                                                form.setFieldValue('cashReceived', current.slice(0, -1));
+                                                            } else {
+                                                                if (current === '' && (val === 0 || val === '000')) return;
+                                                                form.setFieldValue('cashReceived', current + val);
+                                                            }
+                                                        }}
+                                                        style={{ 
+                                                            height: 50,
+                                                            fontSize: 18,
+                                                            fontWeight: 600,
+                                                            transition: 'all 0.1s ease',
+                                                        }}
+                                                        onMouseDown={(e) => {
+                                                            e.currentTarget.style.transform = 'scale(0.96)';
+                                                            e.currentTarget.style.backgroundColor = 'var(--mantine-color-gray-1)';
+                                                        }}
+                                                        onMouseUp={(e) => {
+                                                            e.currentTarget.style.transform = 'scale(1)';
+                                                            e.currentTarget.style.backgroundColor = '';
+                                                        }}
+                                                    >
+                                                        {val === 'backspace' ? <IconBackspace size={22} /> : val}
+                                                    </Button>
+                                                </Grid.Col>
+                                            ))}
+                                        </Grid>
+                                    </Stack>
+                                </Paper>
+                            </Stack>
 
                                 <Paper withBorder p="sm" radius="md">
                                     <Group justify="space-between">

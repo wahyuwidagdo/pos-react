@@ -15,7 +15,7 @@ export default function TransactionDetailModal({ opened, onClose, transactionId 
 
     const { data: transaction, isLoading } = useQuery({
         queryKey: ['transaction', transactionId],
-        queryFn: () => transactionService.getTransactionById(transactionId),
+        queryFn: () => transactionService.getById(transactionId),
         enabled: !!transactionId && opened,
     });
 

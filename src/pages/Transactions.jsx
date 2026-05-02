@@ -40,6 +40,7 @@ export default function Transactions() {
     const { user } = useAuthStore();
     const [search, setSearch] = useState('');
     const [page, setPage] = useState(1);
+    const [dateRange, setDateRange] = useState([null, null]);
     const [detailsOpened, { open: openDetails, close: closeDetails }] = useDisclosure(false);
     const [selectedTxId, setSelectedTxId] = useState(null);
     const [confirmAction, setConfirmAction] = useState(null); // { type: 'cancel'|'return', id, code }
@@ -121,9 +122,17 @@ export default function Transactions() {
     });
 
     const { data, isLoading, isError, refetch } = useQuery({
-        queryKey: ['transactions', page, search],
-        queryFn: () => transactionService.getAll({ page, limit: pageSize, search }),
-        keepPreviousData: true,
+        queryKey: ['transactions', page, search, dateRange],
+        queryFn: () => {
+            const params = { page, limit: pageSize, search };
+            if (dateRange && dateRange[0]) {
+                params.start_date = dayjs(dateRange[0]).format('YYYY-MM-DD');
+            }
+            if (dateRange && dateRange[1]) {
+                params.end_date = dayjs(dateRange[1]).format('YYYY-MM-DD');
+            }
+            return transactionService.getAll(params);
+        },
     });
 
     const pagination = data?.data;
@@ -226,7 +235,12 @@ export default function Transactions() {
                     <Button
                         variant="light"
                         leftSection={<IconRefresh size={16} />}
-                        onClick={() => refetch()}
+                        onClick={() => {
+                            setSearch('');
+                            setDateRange([null, null]);
+                            setPage(1);
+                            queryClient.invalidateQueries({ queryKey: ['transactions'] });
+                        }}
                         loading={isLoading}
                     >
                         {t('common.refresh', 'Refresh')}
@@ -251,6 +265,11 @@ export default function Transactions() {
                         clearable
                         type="range"
                         w={250}
+                        value={dateRange}
+                        onChange={(val) => {
+                            setDateRange(val);
+                            setPage(1);
+                        }}
                     />
                 </Group>
 
