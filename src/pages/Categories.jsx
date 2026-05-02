@@ -232,11 +232,11 @@ export default function Categories() {
                     <Text c="dimmed" size="sm">{t('common.manage_categories')}</Text>
                 </div>
                 <Group gap="sm">
-                    <Group bg="gray.1" p={4} style={{ borderRadius: 8 }} gap={0}>
+                    <Group p={4} style={{ borderRadius: 8, background: 'var(--mantine-color-default-hover)' }} gap={0}>
                         <Button
                             size="xs"
-                            variant={showTrash === 'active' ? 'white' : 'subtle'}
-                            color="dark"
+                            variant={showTrash === 'active' ? 'filled' : 'subtle'}
+                            color={showTrash === 'active' ? 'gray' : 'gray'}
                             radius="md"
                             style={{ boxShadow: showTrash === 'active' ? '0 1px 2px rgba(0,0,0,0.05)' : 'none' }}
                             onClick={() => setShowTrash('active')}
@@ -245,7 +245,7 @@ export default function Categories() {
                         </Button>
                         <Button
                             size="xs"
-                            variant={showTrash === 'trash' ? 'white' : 'subtle'}
+                            variant={showTrash === 'trash' ? 'filled' : 'subtle'}
                             color={showTrash === 'trash' ? 'red' : 'gray'}
                             radius="md"
                             style={{ boxShadow: showTrash === 'trash' ? '0 1px 2px rgba(0,0,0,0.05)' : 'none' }}

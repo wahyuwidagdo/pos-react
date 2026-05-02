@@ -91,9 +91,17 @@ export default function Reports() {
                     <Text c="dimmed" tt="uppercase" fw={700} fz="xs">{title}</Text>
                     <Text fw={700} fz="xl">{value}</Text>
                 </div>
-                <ThemeIcon color={color} variant="light" size="xl" radius="md">
-                    <Icon style={{ width: rem(22), height: rem(22) }} stroke={1.5} />
-                </ThemeIcon>
+                <div style={{ 
+                    width: rem(42), 
+                    height: rem(42), 
+                    borderRadius: rem(10),
+                    background: `var(--mantine-color-${color}-light)`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}>
+                    <Icon style={{ width: rem(24), height: rem(24), color: `var(--mantine-color-${color}-4)` }} stroke={2} />
+                </div>
             </Group>
         </Paper>
     );
@@ -185,7 +193,7 @@ export default function Reports() {
                                     <Paper withBorder p="sm" radius="md">
                                         <Group gap="xs">
                                             <Text size="sm" c="dimmed">{t('reports.profit_margin')}:</Text>
-                                            <Badge color="teal" variant="light" size="lg">
+                                            <Badge color="teal.4" variant="light" size="lg">
                                                 {salesData.summary.profit_margin.toFixed(1)}%
                                             </Badge>
                                         </Group>
@@ -236,12 +244,12 @@ export default function Reports() {
                                                 <Table.Td>{idx + 1}</Table.Td>
                                                 <Table.Td fw={500}>{product.product_name}</Table.Td>
                                                 <Table.Td>
-                                                    <Badge variant="light" size="sm">{product.category_name}</Badge>
+                                                    <Badge variant="light" color="gray.4" size="sm">{product.category_name}</Badge>
                                                 </Table.Td>
                                                 <Table.Td ta="right">{product.total_sold}</Table.Td>
                                                 <Table.Td ta="right">{formatCurrency(product.total_revenue)}</Table.Td>
                                                 <Table.Td ta="right">
-                                                    <Badge color={product.current_stock > 10 ? 'green' : product.current_stock > 0 ? 'orange' : 'red'} variant="light">
+                                                    <Badge color={product.current_stock > 10 ? 'green.4' : product.current_stock > 0 ? 'orange.4' : 'red.4'} variant="light">
                                                         {product.current_stock}
                                                     </Badge>
                                                 </Table.Td>
@@ -304,9 +312,13 @@ export default function Reports() {
                                                 <Text c="dimmed" tt="uppercase" fw={700} fz="xs">Retail Value</Text>
                                                 <Text fw={700} fz="xl">{formatCurrency(stockValueData.total_retail || 0)}</Text>
                                             </div>
-                                            <ThemeIcon color="green" variant="light" size="xl" radius="md">
-                                                <IconTrendingUp style={{ width: rem(22), height: rem(22) }} stroke={1.5} />
-                                            </ThemeIcon>
+                                            <div style={{ 
+                                                width: rem(42), height: rem(42), borderRadius: rem(10),
+                                                background: `var(--mantine-color-green-light)`,
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                            }}>
+                                                <IconTrendingUp style={{ width: rem(24), height: rem(24), color: `var(--mantine-color-green-4)` }} stroke={2} />
+                                            </div>
                                         </Group>
                                     </Paper>
                                     <Paper withBorder p="md" radius="md">
@@ -315,9 +327,13 @@ export default function Reports() {
                                                 <Text c="dimmed" tt="uppercase" fw={700} fz="xs">Total Products</Text>
                                                 <Text fw={700} fz="xl">{stockValueData.total_products || 0}</Text>
                                             </div>
-                                            <ThemeIcon color="blue" variant="light" size="xl" radius="md">
-                                                <IconPackage style={{ width: rem(22), height: rem(22) }} stroke={1.5} />
-                                            </ThemeIcon>
+                                            <div style={{ 
+                                                width: rem(42), height: rem(42), borderRadius: rem(10),
+                                                background: `var(--mantine-color-blue-light)`,
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                            }}>
+                                                <IconPackage style={{ width: rem(24), height: rem(24), color: `var(--mantine-color-blue-4)` }} stroke={2} />
+                                            </div>
                                         </Group>
                                     </Paper>
                                     <Paper withBorder p="md" radius="md">
@@ -326,9 +342,13 @@ export default function Reports() {
                                                 <Text c="dimmed" tt="uppercase" fw={700} fz="xs">Total Units</Text>
                                                 <Text fw={700} fz="xl">{stockValueData.total_units || 0}</Text>
                                             </div>
-                                            <ThemeIcon color="violet" variant="light" size="xl" radius="md">
-                                                <IconShoppingCart style={{ width: rem(22), height: rem(22) }} stroke={1.5} />
-                                            </ThemeIcon>
+                                            <div style={{ 
+                                                width: rem(42), height: rem(42), borderRadius: rem(10),
+                                                background: `var(--mantine-color-violet-light)`,
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                            }}>
+                                                <IconShoppingCart style={{ width: rem(24), height: rem(24), color: `var(--mantine-color-violet-4)` }} stroke={2} />
+                                            </div>
                                         </Group>
                                     </Paper>
                                 </SimpleGrid>
@@ -338,7 +358,7 @@ export default function Reports() {
                                         <Title order={5} mb="xs">{t('reports.profit_margin')}</Title>
                                         <Text c="dimmed" size="sm">
                                             Potential margin on current inventory:
-                                            <Badge ml="xs" color="teal" variant="light" size="lg">
+                                            <Badge ml="xs" color="teal.4" variant="light" size="lg">
                                                 {(((stockValueData.total_retail - stockValueData.total_value) / stockValueData.total_retail) * 100).toFixed(1)}%
                                             </Badge>
                                         </Text>

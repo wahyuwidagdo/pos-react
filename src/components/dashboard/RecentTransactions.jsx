@@ -29,7 +29,7 @@ export default function RecentTransactions({ transactions }) {
             </Table.Td>
             <Table.Td>
                 <Badge
-                    color={getStatusConfig(tx.status).color}
+                    color={`${getStatusConfig(tx.status).color}.4`}
                     variant="light"
                     radius="sm"
                 >

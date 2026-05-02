@@ -105,13 +105,17 @@ export default function StatsGrid({ data, loading }) {
                             </Text>
                         </div>
 
-                        <ThemeIcon
-                            color={stat.color}
-                            variant="light"
-                            style={{ width: rem(38), height: rem(38), borderRadius: rem(38) }}
-                        >
-                            <stat.icon style={{ width: rem(20), height: rem(20) }} stroke={1.5} />
-                        </ThemeIcon>
+                        <div style={{ 
+                            width: rem(38), 
+                            height: rem(38), 
+                            borderRadius: rem(38),
+                            background: `var(--mantine-color-${stat.color}-light)`,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}>
+                            <stat.icon style={{ width: rem(20), height: rem(20), color: `var(--mantine-color-${stat.color}-4)` }} stroke={2} />
+                        </div>
                     </Group>
 
                     <Group align="flex-end" gap="xs" mt="xs" justify="space-between">

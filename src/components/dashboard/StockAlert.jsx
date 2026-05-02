@@ -6,18 +6,18 @@ export default function StockAlert({ products }) {
 
     const getStockBadge = (stock) => {
         if (stock <= 0) {
-            return <Badge color="red" variant="light" radius="sm" size="xs">{t('dashboard.out_of_stock')}</Badge>;
+            return <Badge color="red.4" variant="light" radius="sm" size="xs">{t('dashboard.out_of_stock')}</Badge>;
         }
         if (stock < 5) {
-            return <Badge color="orange" variant="light" radius="sm" size="xs">{t('dashboard.low_stock')}</Badge>;
+            return <Badge color="orange.4" variant="light" radius="sm" size="xs">{t('dashboard.low_stock')}</Badge>;
         }
-        return <Badge color="yellow" variant="light" radius="sm" size="xs">{t('dashboard.warning_stock')}</Badge>;
+        return <Badge color="yellow.4" variant="light" radius="sm" size="xs">{t('dashboard.warning_stock')}</Badge>;
     };
 
     const getStockColor = (stock) => {
-        if (stock <= 0) return 'red';
-        if (stock < 5) return 'orange';
-        return 'yellow';
+        if (stock <= 0) return 'red.4';
+        if (stock < 5) return 'orange.4';
+        return 'yellow.4';
     };
 
     return (
@@ -42,7 +42,7 @@ export default function StockAlert({ products }) {
                                     </Table.Td>
                                     <Table.Td>{getStockBadge(p.stock)}</Table.Td>
                                     <Table.Td ta="right">
-                                        <Badge color={getStockColor(p.stock)} variant="filled" size="md" radius="sm">
+                                        <Badge color={getStockColor(p.stock)} variant="light" size="md" radius="sm">
                                             {p.stock}
                                         </Badge>
                                     </Table.Td>

@@ -350,11 +350,11 @@ export default function Products() {
                     <Text c="dimmed" size="sm">{t('common.manage_inventory')}</Text>
                 </div>
                 <Group gap="sm" wrap="nowrap">
-                    <Group bg="gray.1" p={4} style={{ borderRadius: 8 }} gap={0}>
+                    <Group p={4} style={{ borderRadius: 8, background: 'var(--mantine-color-default-hover)' }} gap={0}>
                         <Button
                             size="xs"
-                            variant={viewMode === 'active' ? 'white' : 'subtle'}
-                            color="dark"
+                            variant={viewMode === 'active' ? 'filled' : 'subtle'}
+                            color={viewMode === 'active' ? 'gray' : 'gray'}
                             radius="md"
                             style={{ boxShadow: viewMode === 'active' ? '0 1px 2px rgba(0,0,0,0.05)' : 'none' }}
                             onClick={() => { setViewMode('active'); setPage(1); }}
@@ -363,7 +363,7 @@ export default function Products() {
                         </Button>
                         <Button
                             size="xs"
-                            variant={viewMode === 'trash' ? 'white' : 'subtle'}
+                            variant={viewMode === 'trash' ? 'filled' : 'subtle'}
                             color={viewMode === 'trash' ? 'red' : 'gray'}
                             radius="md"
                             style={{ boxShadow: viewMode === 'trash' ? '0 1px 2px rgba(0,0,0,0.05)' : 'none' }}

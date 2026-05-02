@@ -123,7 +123,7 @@ export default function CashFlow() {
             if (startDate) params.start_date = startDate;
             if (endDate) params.end_date = endDate;
             const res = await cashFlowService.getAll(params);
-            return res.data;
+            return res;
         },
     });
 
@@ -384,7 +384,7 @@ export default function CashFlow() {
                                                 </Text>
                                             </Table.Td>
                                             <Table.Td>
-                                                <Badge color={cfg.color} variant="light" size="sm" leftSection={<cfg.icon size={12} />}>
+                                                <Badge color={`${cfg.color}.4`} variant="light" size="sm" leftSection={<cfg.icon size={12} />}>
                                                     {cfg.label}
                                                 </Badge>
                                             </Table.Td>

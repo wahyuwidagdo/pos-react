@@ -81,7 +81,7 @@ export default function Transactions() {
 
     const handlePrintReceipt = async (txId) => {
         try {
-            const res = await transactionService.getTransactionById(txId);
+            const res = await transactionService.getById(txId);
             const tx = res.data;
             setReceiptTx(tx);
             setReceiptItems((tx.transaction_details || []).map(d => ({
@@ -97,7 +97,7 @@ export default function Transactions() {
     };
 
     const cancelMutation = useMutation({
-        mutationFn: (id) => transactionService.cancelTransaction(id),
+        mutationFn: (id) => transactionService.cancel(id),
         onSuccess: () => {
             notifications.show({ title: t('common.success', 'Berhasil'), message: t('transactions.cancel_success', 'Transaksi berhasil dibatalkan'), color: 'green' });
             queryClient.invalidateQueries({ queryKey: ['transactions'] });
@@ -109,7 +109,7 @@ export default function Transactions() {
     });
 
     const returnMutation = useMutation({
-        mutationFn: (id) => transactionService.returnTransaction(id),
+        mutationFn: (id) => transactionService.return(id),
         onSuccess: () => {
             notifications.show({ title: t('common.success', 'Berhasil'), message: t('transactions.return_success', 'Transaksi berhasil diretur'), color: 'green' });
             queryClient.invalidateQueries({ queryKey: ['transactions'] });
@@ -122,7 +122,7 @@ export default function Transactions() {
 
     const { data, isLoading, isError, refetch } = useQuery({
         queryKey: ['transactions', page, search],
-        queryFn: () => transactionService.getAllTransactions({ page, limit: pageSize, search }),
+        queryFn: () => transactionService.getAll({ page, limit: pageSize, search }),
         keepPreviousData: true,
     });
 
@@ -133,11 +133,11 @@ export default function Transactions() {
     const getStatusBadge = (status) => {
         switch (status) {
             case 'returned':
-                return <Badge color="orange" variant="light" radius="sm">{t('transactions.returned', 'Diretur')}</Badge>;
+                return <Badge color="orange.4" variant="light" radius="sm">{t('transactions.returned', 'Diretur')}</Badge>;
             case 'cancelled':
-                return <Badge color="red" variant="light" radius="sm">{t('transactions.cancelled', 'Dibatalkan')}</Badge>;
+                return <Badge color="red.4" variant="light" radius="sm">{t('transactions.cancelled', 'Dibatalkan')}</Badge>;
             default:
-                return <Badge color="green" variant="light" radius="sm">{t('transactions.completed', 'Selesai')}</Badge>;
+                return <Badge color="green.4" variant="light" radius="sm">{t('transactions.completed', 'Selesai')}</Badge>;
         }
     };
 
