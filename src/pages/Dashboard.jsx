@@ -71,7 +71,7 @@ export default function Dashboard() {
         <QuickActions />
       </Box>
 
-      <StatsGrid data={data} loading={isLoading} />
+      <StatsGrid data={data} loading={isLoading} dateRange={dateRange} />
 
       <Grid mt="lg">
         <Grid.Col span={{ base: 12, md: 8 }}>
