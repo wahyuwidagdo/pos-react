@@ -96,7 +96,7 @@ export default function CheckoutModal({ opened, onClose, total }) {
                     price: item.price
                 })),
                 payment_method: values.paymentMethod,
-                cash: currentIsCash ? values.cashReceived : total,
+                cash: currentIsCash ? Number(values.cashReceived) || 0 : total,
             };
             const response = await transactionService.create(payload);
             return response;
@@ -130,11 +130,12 @@ export default function CheckoutModal({ opened, onClose, total }) {
     });
 
     const handleSubmit = (values) => {
-        if (isCash && values.cashReceived < total) {
+        const cashNum = Number(values.cashReceived) || 0;
+        if (isCash && cashNum < total) {
             form.setFieldError('cashReceived', t('pos.insufficient_amount'));
             return;
         }
-        mutation.mutate(values);
+        mutation.mutate({ ...values, cashReceived: cashNum });
     };
 
     const handleClose = () => {
